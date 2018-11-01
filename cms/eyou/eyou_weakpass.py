@@ -19,22 +19,26 @@ class eyou_weakpass_BaseVerify:
         payload = "/weakpass.list"
         vulnurl = self.url + payload
         try:
-            req = requests.get(vulnurl, timeout=10, verify=False)
+            req = requests.get(vulnurl, timeout=10, verify=False, allow_redirects=False)
             if req.status_code == 200 and r"@" in req.text:
                 cprint("[+]存在eyou邮件系统信息泄露...(敏感信息)\tpayload: "+vulnurl, "green")
+            else:
+                cprint("[-]不存在eyou_weakpass漏洞", "white", "on_grey")
 
         except:
-            cprint("[-] "+__file__+"====>连接超时", "cyan")
+            cprint("[-] "+__file__+"====>可能不存在漏洞", "cyan")
 
         payload = "/sysinfo.html"
         vulnurl = self.url + payload
         try:
-            req = requests.get(vulnurl, timeout=10, verify=False)
+            req = requests.get(vulnurl, timeout=10, verify=False, allow_redirects=False)
             if req.status_code == 200 and r"系统基本信息检查" in req.text:
                 cprint("[+]存在eyou邮件系统信息泄露...(敏感信息)\tpayload: "+vulnurl, "green")
+            else:
+                cprint("[-]不存在eyou_weakpass漏洞", "white", "on_grey")
 
         except:
-            cprint("[-] "+__file__+"====>连接超时", "cyan")
+            cprint("[-] "+__file__+"====>可能不存在漏洞", "cyan")
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")

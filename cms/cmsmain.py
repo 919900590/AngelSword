@@ -6,6 +6,17 @@ referer: unknow
 author: Lucifer
 description: 包含所有cms漏洞类型，封装成一个模块
 '''
+
+#泛微
+from cms.weaver_oa.weaver_oa_download_sqli import weaver_oa_download_sqli_BaseVerify
+from cms.weaver_oa.weaver_oa_db_disclosure import weaver_oa_db_disclosure_BaseVerify
+from cms.weaver_oa.weaver_oa_filedownload import weaver_oa_filedownload_BaseVerify
+
+#phpok vulns
+from cms.phpok.phpok_res_action_control_filedownload import phpok_res_action_control_filedownload_BaseVerify
+from cms.phpok.phpok_api_param_sqli import phpok_api_param_sqli_BaseVerify
+from cms.phpok.phpok_remote_image_getshell import phpok_remote_image_getshell_BaseVerify
+
 #typecho vuls
 from cms.typecho.typecho_install_code_exec import typecho_install_code_exec_BaseVerify
 
@@ -82,6 +93,7 @@ from cms.live800.live800_downlog_filedownload import live800_downlog_filedownloa
 from cms.live800.live800_loginAction_sqli import live800_loginAction_sqli_BaseVerify
 from cms.live800.live800_sta_export_sqli import live800_sta_export_sqli_BaseVerify
 from cms.live800.live800_services_xxe import live800_services_xxe_BaseVerify
+from cms.live800.live800_fileDownloadServer_fileread import live800_fileDownloadServer_fileread_BaseVerify
 
 #thinkphp vulns
 from cms.thinkphp.onethink_category_sqli import onethink_category_sqli_BaseVerify
@@ -131,6 +143,9 @@ from cms.digital_campus.digital_campus_systemcodelist_sqli import digital_campus
 
 #jeecms vulns
 from cms.jeecms.jeecms_fpath_filedownload import jeecms_fpath_filedownload_BaseVerify
+
+#jeecg vulns
+from cms.jeecg.jeecg_pwd_reset import jeecg_pwd_reset_BaseVerify
 
 #shopex vulns
 from cms.shopex.shopex_phpinfo_disclosure import shopex_phpinfo_disclosure_BaseVerify

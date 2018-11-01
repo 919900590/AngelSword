@@ -6,7 +6,26 @@ referer: unknow
 author: Lucifer
 description: 包含所有system漏洞类型，封装成一个模块
 '''
+#ssh漏洞
+from system.ssh.libssh_bypass_auth import libssh_bypass_auth_BaseVerify
+
+#elasticsearch vulns
+from system.elasticsearch.elasticsearch_unauth import elasticsearch_unauth_BaseVerify
+
+#couchdb vulns
+from system.couchdb.couchdb_unauth import couchdb_unauth_BaseVerify
+
+#zookeeper vulns
+from system.zookeeper.zookeeper_unauth import zookeeper_unauth_BaseVerify
+
+#GoAhead vulns
+from system.goahead.goahead_LD_PRELOAD_rce import goahead_LD_PRELOAD_rce_BaseVerify
+
+#topsec vulns
+from system.topsec.topsec_change_lan_filedownload import topsec_change_lan_filedownload_BaseVerify
+
 #tomcat vulns
+from system.tomcat.tomcat_weak_pass import tomcat_weak_pass_BaseVerify
 from system.tomcat.tomcat_put_exec import tomcat_put_exec_BaseVerify
 
 #redis vulns
@@ -23,8 +42,11 @@ from system.turbomail.turbomail_conf import turbomail_conf_BaseVerify
 from system.turbomail.turbogate_services_xxe import turbogate_services_xxe_BaseVerify
 
 #weblogic vulns
+from system.weblogic.weblogic_weak_pass import weblogic_weak_pass_BaseVerify
 from system.weblogic.weblogic_ssrf import weblogic_ssrf_BaseVerify
+from system.weblogic.weblogic_xmldecoder_exec import weblogic_xmldecoder_exec_BaseVerify
 from system.weblogic.weblogic_interface_disclosure import weblogic_interface_disclosure_BaseVerify
+from system.weblogic.weblogic_ws_utc_xxe import weblogic_ws_utc_xxe_BaseVerify 
 
 #hudson vulns
 from system.hudson.hudson_ws_disclosure import hudson_ws_disclosure_BaseVerify
@@ -45,6 +67,7 @@ from system.glassfish.glassfish_fileread import glassfish_fileread_BaseVerify
 from system.zabbix.zabbix_jsrpc_profileIdx2_sqli import zabbix_jsrpc_profileIdx2_sqli_BaseVerify
 
 #php vulns
+from system.php.php_expose_disclosure import php_expose_disclosure_BaseVerify
 from system.php.php_fastcgi_read import php_fastcgi_read_BaseVerify
 
 #hfs vulns

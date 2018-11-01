@@ -17,17 +17,25 @@ class smtp_starttls_plaintext_inj_BaseVerify:
         self.url = url
 
     def run(self):
+        port = 25
         if r"http" in self.url:
             #提取host
             host = urlparse(self.url)[1]
+            try:
+                port = int(host.split(':')[1])
+            except:
+                pass
             flag = host.find(":")
             if flag != -1:
                 host = host[:flag]
         else:
-            host = self.url
+            if self.url.find(":") >= 0:
+                host = self.url.split(":")[0]
+                port = int(self.url.split(":")[1])
+            else:
+                host = self.url
 
         try:
-            port = 25
             s = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
             s.settimeout(6)
             s.connect((host, port))
@@ -37,9 +45,11 @@ class smtp_starttls_plaintext_inj_BaseVerify:
             s.close()
             if r"220 Ready to start TLS" in result:
                 cprint("[+]存在smtp starttls明文命令注入(CVE-2011-0411)漏洞...(中危)\tpayload: "+host+":"+str(port), "yellow")
+            else:
+                cprint("[-]不存在smtp_starttls_plaintext_inj漏洞", "white", "on_grey")
 
         except:
-            cprint("[-] "+__file__+"====>连接超时", "cyan")
+            cprint("[-] "+__file__+"====>可能不存在漏洞", "cyan")
 
 if __name__ == "__main__":
     warnings.filterwarnings("ignore")

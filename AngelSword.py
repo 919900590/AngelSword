@@ -3,6 +3,7 @@
 #Author: Lucifer
 #Prog: Main
 #date: changeby 2017-8-21 
+
 import os
 import re
 import io 
@@ -14,12 +15,16 @@ from termcolor import cprint
 from urllib.parse import urlparse
 from information.informationmain import *
 from cms.cmsmain import *
-from pocdb import pocdb_pocs
+try:
+    from pocdb import pocdb_pocs
+except Exception as e:
+    print(e)
 from industrial.industrialmain import *
 from system.systemmain import *
 from hardware.hardwaremain import *
 from multiprocessing import Pool
 from multiprocessing.dummy import Pool as ThreadPool
+
 warnings.filterwarnings("ignore")
 sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
 SEARCH_HISTORY = dict()
@@ -37,16 +42,20 @@ FLAGLET = '''
 
 threads_num = 10
 #并行任务池
-cmspool = ThreadPool()
+#cmspool = ThreadPool()
 cmspool = ThreadPool(threads_num)
-industrialpool = ThreadPool()
+#industrialpool = ThreadPool()
 industrialpool = ThreadPool(threads_num)
-systempool = ThreadPool()
+#systempool = ThreadPool()
 systempool = ThreadPool(threads_num)
-hardwarepool = ThreadPool()
+#hardwarepool = ThreadPool()
 hardwarepool = ThreadPool(threads_num)
-informationpool = ThreadPool()
+#informationpool = ThreadPool()
 informationpool = ThreadPool(threads_num)
+
+def split_string(strLine):
+    pattern = r"[a-z_]+BaseVerify"
+    return str(re.findall(pattern, strLine)).replace("_BaseVerify", "").replace("['","").replace("']","")
 
 def informationprint(informationname):
     msg = ">>>Scanning information vulns.."
@@ -198,8 +207,8 @@ Usage: python3 AngelSword.py -u http://www.example.com 对url执行所有poc检�
         cmsclass = pocclass.cmspocdict
         print("\t\t\tCMS POC")
         for cms in cmsclass:
-            print("|"+cms+"")
-            print("|---------------------------------------------------------------------|")
+            print("|"+cms+"\t|\t"+split_string(str(cmsclass.get(cms).__str__)))
+            print("|-------------------------------------------------------------------------------------------------------------|")
         print("\r")
 
         #列出industrial POC名称
@@ -207,8 +216,8 @@ Usage: python3 AngelSword.py -u http://www.example.com 对url执行所有poc检�
         industrialclass = pocclass.industrialpocdict
         print("\t\t\tIndustrial POC")
         for industrial in industrialclass:
-            print("|"+industrial+"")
-            print("|---------------------------------------------------------------------|")
+            print("|"+industrial+"\t|\t"+split_string(str(industrialclass.get(industrial).__str__)))
+            print("|-------------------------------------------------------------------------------------------------------------|")
         print("\r")
 
         #列出SYSTEM POC名称
@@ -216,8 +225,8 @@ Usage: python3 AngelSword.py -u http://www.example.com 对url执行所有poc检�
         systemclass = pocclass.systempocdict
         print("\t\t\tSYSTEM POC")
         for system in systemclass:
-            print("|"+system+"")
-            print("|---------------------------------------------------------------------|")
+            print("|"+system+"\t|\t"+split_string(str(systemclass.get(system).__str__)))
+            print("|-------------------------------------------------------------------------------------------------------------|")
         print("\r")
 
         #列出HARDWARE POC名称
@@ -225,9 +234,10 @@ Usage: python3 AngelSword.py -u http://www.example.com 对url执行所有poc检�
         hardwareclass = pocclass.hardwarepocdict
         print("\t\t\tHARDWARE POC")
         for hardware in hardwareclass:
-            print("|"+hardware+"")
-            print("|---------------------------------------------------------------------|")
+            print("|"+hardware+"\t|\t"+split_string(str(hardwareclass.get(hardware).__str__)))
+            print("|-------------------------------------------------------------------------------------------------------------|")
         print("\r")
+
     elif sys.argv[1] == "-s" and sys.argv[2]:
         keywords = sys.argv[2].strip()
         count = 0
@@ -240,7 +250,8 @@ Usage: python3 AngelSword.py -u http://www.example.com 对url执行所有poc检�
                     line = line.split(":")
                     linename = line[0].rstrip('"').lstrip('"')
                     linepoc = line[1].replace("_BaseVerify(url),", "")
-                    cprint("["+str(count)+"]漏洞名: "+linename+"=======>"+linepoc, "yellow")
+                    searchstr = "["+str(count)+"]漏洞名: "+linename+"=======>"+linepoc
+                    cprint(searchstr, "yellow")
                     SEARCH_HISTORY[str(count)] = linepoc
         if os.path.exists(".history") is True:
             os.remove(".history")
@@ -303,9 +314,10 @@ Usage: python3 AngelSword.py -u http://www.example.com 对url执行所有poc检�
             if keyword.__str__().find(sys.argv[2].strip()) is not -1:
                 break
         cprint(FLAGLET, "cyan")
-        cprint("[+] 加载poc: ["+keyword.__module__+"]", "cyan")
-        cprint("[+] 发送payload...", "cyan")
-        cprint("[+] 正在攻击.."+target, "cyan")
+        sys.stdout.write("\033[1;35m[+] 加载poc: ["+keyword.__module__+"]\033[0m\n")
+        sys.stdout.write("\033[1;35m[+] 发送payload..\033[0m\n")
+        sys.stdout.write("\033[1;35m[+] 正在攻击.."+target+"\033[0m\n")
+        sys.stdout.flush()
         keyword.run()
     elif sys.argv[1] == "-r" and sys.argv[3] == "-t":
         rangedict = dict()
@@ -388,6 +400,8 @@ Usage: python3 AngelSword.py -u http://www.example.com 对url执行所有poc检�
         cprint("|-------------------------------------|","green")
 
     elif sys.argv[1] == "-c":
+        os.system('find ../AngelSword -type d -name "*pycache*" | xargs rm -rvf > /dev/null')
+        os.system('find ../AngelSword -type f -name "*pyc*" | xargs rm -rvf > /dev/null')
         fullpoc = list()
         tmppath = list()
         fullpath = list()
@@ -417,3 +431,4 @@ Usage: python3 AngelSword.py -u http://www.example.com 对url执行所有poc检�
 
     else:
         AngelSwordMain(sys.argv[1])
+
